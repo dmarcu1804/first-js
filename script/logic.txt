@@ -1,0 +1,4 @@
+PlayerSelection = Rock
+ComputerSelection = Paper
+Expected: Rock beats Paper, You Won
+

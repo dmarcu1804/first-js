@@ -58,21 +58,105 @@ function playRound(playerSelection, computerSelection){
     }
 }
 
-function game(){
-    for(let i = 0; i < 5; i++){
-        const computerSelection = getComputerChoice().toLowerCase();
-        let playerSelection = prompt("Rock, Paper or Scissors?").toLowerCase();
+//selecting all buttons
+const btns = document.querySelectorAll('button');
+//creating a div element
+const div = document.createElement('div');
+//changing style of div so it can be visible in html
+div.setAttribute('style', 'background-color: red; width:200px; height: 100px;'); 
 
-        while(playerSelection !== "rock" && playerSelection !== "paper" && playerSelection !== "scissors"){
-            playerSelection = prompt("Please re enter Rock, Paper or Scissors?").toLowerCase();
-        }
-        //console.log(playerSelection !== "rock" && playerSelection !== "paper" && playerSelection !== "scissors");
+//adding div to the body
+document.body.appendChild(div);
 
-        console.log("iteration is " + i + " " +playRound(playerSelection,computerSelection));
-        console.log("computer said " + "iteration is " + i + " " + computerSelection);
-        console.log(counterPlayer);
-        console.log(counterComp);
+//creating h1 element
+const headerPlayer = document.createElement('h1');
+const headerComp = document.createElement('h1');
+const winner = document.createElement('h1');
+
+
+
+//setting class of that div to counter-div
+div.classList.add('counter-div');
+const controller = new AbortController();
+
+
+function disableButtons() {
+    document.getElementById("rock").disabled = true; 
+    document.getElementById("paper").disabled = true; 
+    document.getElementById("scissors").disabled = true; 
+};
+
+function helperInput(){
+    //taking id of button: rock, paper or scissors as playerSelection
+    const playerSelection = this.id;
+    console.log("playerSelection is " + playerSelection)
+    //computer selection is here - every time a button is pressed, it generates another comp choice
+    const computerSelection = getComputerChoice().toLowerCase();
+
+
+    playRound(playerSelection, computerSelection);
+    console.log("player is " + playerSelection);
+    console.log("computer is " +computerSelection);
+
+    //displaying player score to DOM
+    headerPlayer.textContent = `Player score is ${counterPlayer}`;
+    headerComp.textContent = `Computer score is ${counterComp}`;
+    
+    //adding the score to the div I initially created
+    const headerScorePlayer = div.appendChild(headerPlayer);
+    const headerScoreComp = div.appendChild(headerComp);
+    
+    
+    if(counterPlayer >= 5){
+        div.removeChild(headerScorePlayer);
+        div.removeChild(headerScoreComp);
+        winner.textContent = 'Player won';
+        div.appendChild(winner);
+        disableButtons();
+
+    }else if(counterComp >= 5){
+        div.removeChild(headerScorePlayer);
+        div.removeChild(headerScoreComp);
+        winner.textContent = 'Computer won';
+        div.appendChild(winner);
+        controller.abort();
+        disableButtons();
+        //btn.removeEventListener('click', playerInput);
+        
     }
+    //console.log(headerScorePlayer.textContent);
+}
+
+function playerInput(){
+    //for each button that we press, we want to do something
+    btns.forEach(btn => btn.addEventListener('click', helperInput));
+    
+}
+
+playerInput();
+
+
+
+function game(){
+    
+    //      Removed 5 round logic
+    // for(let i = 0; i < 5; i++){
+    //     const computerSelection = getComputerChoice().toLowerCase();
+    //     let playerSelection = prompt("Rock, Paper or Scissors?").toLowerCase();
+
+    //     while(playerSelection !== "rock" && playerSelection !== "paper" && playerSelection !== "scissors"){
+    //         playerSelection = prompt("Please re enter Rock, Paper or Scissors?").toLowerCase();
+    //     }
+    //     //console.log(playerSelection !== "rock" && playerSelection !== "paper" && playerSelection !== "scissors");
+
+    //     console.log("iteration is " + i + " " +playRound(playerSelection,computerSelection));
+    //     console.log("computer said " + "iteration is " + i + " " + computerSelection);
+    //     console.log(counterPlayer);
+    //     console.log(counterComp);
+    // }
+    const playerSelection = 'rock';
+    const computerSelection = getComputerChoice().toLowerCase();
+    playRound(playerSelection, computerSelection);
     if(counterPlayer > counterComp){
         console.log("Player Won!");
     }
@@ -87,6 +171,6 @@ function game(){
 
 
 
-game();
+//game();
 //console.log(playRound(playerSelection,computerSelection));
 //console.log("Computer guess is " + computerSelection);
